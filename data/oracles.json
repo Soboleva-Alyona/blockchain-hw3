@@ -1,0 +1,16 @@
+{
+    "oracles" : [
+        {
+            "address" : "0xdc530d9457755926550b59e8eccdae7624181557",
+            "tokenName" : "LINK/ETH"
+        },
+        {
+            "address" : "0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419",
+            "tokenName" : "ETH/USD"
+        },
+        {
+            "address" : "0xee9f2375b4bdf6387aa8265dd4fb8f16512a1d46",
+            "tokenName" : "USDT/ETH"
+        }
+    ]
+}
