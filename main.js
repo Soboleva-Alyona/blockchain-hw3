@@ -1,24 +1,37 @@
-import { ethers } from 'ethers';
-import apiKey from './data/api_key.json' assert { type: "json" };
-import abi from "./data/abi.json" assert { type: "json" };
-import oraclesInfo from './data/oracles.json' assert { type: "json" };
+const ethers = require('ethers')
+const abi = require('./data/abi.json')
+const apiKey = require('./data/api_key.json')
+const oraclesInfo = require('./data/oracles.json')
+const Network = require('alchemy-sdk')
+const Alchemy = require('alchemy-sdk')
+var Web3 = require('web3')
 
 const settings = {
-    apiKey: apiKey,
-    network: "homestead",
+    apiKey: apiKey
 };
 
-const alchemyProvider = new ethers.providers.AlchemyWebSocketProvider(settings.network, settings.apiKey);
+'use strict'
 
-function main(){
-    oraclesInfo.oracles.forEach(element => {
-        const contract = new ethers.Contract(element.address, abi, alchemyProvider);
-        contract.on("AnswerUpdated", (current, updatedAt) => {
-            console.log(element.tokenName, ": feed changed to ", current, " at ", updatedAt)
-        })
-        console.log("Started listening to event AnswerUpdated in contract ", element.tokenName);
-    });
+const main = async () => {
+
+  const web3 = new Web3('wss://eth-mainnet.ws.alchemyapi.io/ws/' + settings.apiKey)
+  
+  oraclesInfo.oracles.forEach(({ address, tokenName, precision }) => {
+    const contract = new web3.eth.Contract(abi, address)
+
+    contract.events.AnswerUpdated()
+    .on("connected", function(subscriptionId){
+        console.log(`Subscribed on events "AnswerUpdated" in contract name = ${tokenName}, address = ${address}`)
+      })
+      .on('data', function(event) {
+          const formattedCurrent = ethers.utils.formatUnits(event.returnValues.current, precision)
+          const formattedUpdatedAt = new Date(event.returnValues.updatedAt * 1000)
+          console.log(`[${tokenName}] At ${formattedUpdatedAt} exchange rate was ${formattedCurrent} in round #${event.returnValues.roundId}`)
+      })
+      .on('error', function(error, receipt) { 
+         console.log("error")
+      })
+  })
 }
 
-main();
-    
+main()
