@@ -2,9 +2,7 @@ const ethers = require('ethers')
 const abi = require('./data/abi.json')
 const apiKey = require('./data/api_key.json')
 const oraclesInfo = require('./data/oracles.json')
-const Network = require('alchemy-sdk')
-const Alchemy = require('alchemy-sdk')
-var Web3 = require('web3')
+const Web3 = require('web3')
 
 const settings = {
     apiKey: apiKey
