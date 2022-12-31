@@ -19,7 +19,7 @@ const main = async () => {
 
     contract.events.AnswerUpdated()
     .on("connected", function(subscriptionId){
-        console.log(`Subscribed on events "AnswerUpdated" in contract name = ${tokenName}, address = ${address}`)
+        console.log(`[${tokenName}] Subscribed on events "AnswerUpdated", address = ${address}`)
       })
       .on('data', function(event) {
           const formattedCurrent = ethers.utils.formatUnits(event.returnValues.current, precision)
